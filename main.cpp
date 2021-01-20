@@ -4,13 +4,14 @@
 
 using namespace std;
 
+// This struct represents a linked list node.
 struct ЭлементОдносвязногоСписка
 {
     int значение;
     ЭлементОдносвязногоСписка* следующий;
 };
 
-// This structure represents a Singly Linked List data structure.
+// This struct represents a Singly Linked List data structure.
 struct ОдносвязныйСписок
 {
 public:
@@ -18,6 +19,16 @@ public:
 
     ОдносвязныйСписок()
     {
+    }
+
+    ~ОдносвязныйСписок()
+    {
+        while (_голова)
+        {
+            УдалитьПоследнийУзел();
+        }
+
+        cout << "Linked list destroyed." << endl;
     }
 
     void ДобавитьСУчётомСортировки(int знач)
@@ -58,7 +69,6 @@ public:
 
         auto г = _голова;
 
-
         while (г->следующий != nullptr && г->следующий->значение <= знач)
         {
             г = г->следующий;
@@ -69,6 +79,8 @@ public:
 
     ЭлементОдносвязногоСписка* ПолучитьЗад()
     {
+        if (!_голова) return nullptr;
+
         auto г = _голова;
 
         while (г->следующий != nullptr)
@@ -103,7 +115,11 @@ public:
     {
         auto последний = ПолучитьЗад();
 
-        if (_голова == последний)
+        if (!последний)
+        {
+            return;
+        }
+        else if (_голова == последний)
         {
             _голова = nullptr;
             delete последний;
@@ -122,22 +138,21 @@ public:
     }
 };
 
-// This structure represents a Queue data structure.
+// This struct represents a Queue data structure.
 struct Очередь
 {
 public:
     Очередь(int вместимость)
     {
-        _мас = new int[вместимость];
-
+        _массив = new int[вместимость];
         _колво = 0;
-
         _вместимость = вместимость;
     }
 
     ~Очередь()
     {
-        delete[] _мас;
+        delete[] _массив;
+        cout << "Queue destroyed." << endl;
     }
 
     bool Засунуть(int знач)
@@ -155,11 +170,11 @@ public:
             throw new std::runtime_error("queue is empty");
         }
 
-        auto frontElement = получитьПередний();
+        auto переднийЭлемент = получитьПередний();
 
         подвинутьВнутреннийМассивВверх();
 
-        return frontElement;
+        return переднийЭлемент;
     }
 
     bool Пуста()
@@ -181,26 +196,26 @@ public:
     {
         for (auto и = 0; и < _колво; и++)
         {
-            cout << _мас[и] << endl;
+            cout << _массив[и] << endl;
         }
     }
 
 private:
-    int* _мас;
+    int* _массив;
     int _вместимость;
     int _колво;
 
     void вставитьБезПроверки(int знач)
     {
-        _мас[_колво] = знач;
+        _массив[_колво] = знач;
         _колво++;
     }
 
     void подвинутьВнутреннийМассивВверх()
     {
-        for (int i = 0; i < _колво - 1; i++)
+        for (int и = 0; и < _колво - 1; и++)
         {
-            _мас[i] = _мас[i + 1];
+            _массив[и] = _массив[и + 1];
         }
 
         _колво--;
@@ -208,7 +223,7 @@ private:
 
     int получитьПередний()
     {
-        return _мас[0];
+        return _массив[0];
     }
 };
 
@@ -228,7 +243,7 @@ int main() {
     }
     чтец.close();
 
-    cout << "Read into LinkedList successfully." << endl;
+    cout << "Read into LinkedList." << endl;
 
     Очередь очередь(колво);
 
@@ -242,7 +257,7 @@ int main() {
         текущийУзел = текущийУзел->следующий;
     }
 
-    cout << "Copied into Queue successfully." << endl;
+    cout << "Copied into Queue." << endl;
 
     ofstream писарь("./output.txt");
     while (!очередь.Пуста())
